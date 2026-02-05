@@ -66,4 +66,24 @@ empl_counts = [(empl_counts[0]/total) * 100, (empl_counts[1]/total) * 100, (empl
 plt.pie(empl_counts, labels=['Non-employee', 'Current employee', 'Previous employee'], autopct='%.2f%%', colors=['#FFDB80', '#66B4B6', '#97A0CF'])
 plt.suptitle('LinkedIn Engagement by Employee Status')
 plt.title('Oct-Dec 2025')
+
+
+#------------ANALYSIS 2: What topic of post gets the most views and engagement?-----------------
+
+#Groupby topic, sum views, likes, and comments
+topics_df = df.groupby(['Topic'])[['Impressions/Views', 'Likes', 'Comments', 'Reposts']].agg('sum')
+topics_df['Num Posts'] = df.groupby(['Topic']).size().values
+topics_df = topics_df.iloc[:, [4, 0, 1, 2, 3]]
+#print(topics_df)
+
+#Find ratio of views/engagement to posts per topic, rounded to 2 decimal places
+topics_df['Engagement'] = topics_df[['Likes', 'Comments', 'Reposts']].sum(axis=1)
+topics_df['Views to Posts'] = topics_df['Impressions/Views'] / topics_df['Num Posts']
+topics_df['Engagement to Posts'] = topics_df['Engagement'] / topics_df['Num Posts']
+topics_df[['Views to Posts', 'Engagement to Posts']] = topics_df[['Views to Posts', 'Engagement to Posts']].apply(lambda x: round(x, 2))
+
+topics_df.plot(y='Views to Posts', kind='bar', ylabel="Mean Views", legend=False, rot=45, title='Mean Views of LinkedIn Posts by Topic', color='#00a6cb')
+topics_df.plot(y='Engagement to Posts', kind='bar', ylabel="Mean Likes/Comments/Reposts", legend=False, rot=45, title='Mean Engagement With LinkedIn Posts by Topic', color='#2F419F')
 plt.show()
+
+#Double Bar graph by topic - for fun :)
