@@ -82,8 +82,12 @@ topics_df['Views to Posts'] = topics_df['Impressions/Views'] / topics_df['Num Po
 topics_df['Engagement to Posts'] = topics_df['Engagement'] / topics_df['Num Posts']
 topics_df[['Views to Posts', 'Engagement to Posts']] = topics_df[['Views to Posts', 'Engagement to Posts']].apply(lambda x: round(x, 2))
 
-topics_df.plot(y='Views to Posts', kind='bar', ylabel="Mean Views", legend=False, rot=45, title='Mean Views of LinkedIn Posts by Topic', color='#00a6cb')
-topics_df.plot(y='Engagement to Posts', kind='bar', ylabel="Mean Likes/Comments/Reposts", legend=False, rot=45, title='Mean Engagement With LinkedIn Posts by Topic', color='#2F419F')
+ax_views = topics_df.plot(y='Views to Posts', kind='bar', ylabel="Mean Views", legend=False, title='Mean Views of LinkedIn Posts by Topic', color='#00a6cb')
+ax_views.set_xticklabels(ax_views.get_xticklabels(), rotation=35, ha='center')
+plt.tight_layout()
+ax_eng = topics_df.plot(y='Engagement to Posts', kind='bar', ylabel="Mean Likes/Comments/Reposts", legend=False, title='Mean Engagement With LinkedIn Posts by Topic', color='#2F419F')
+ax_eng.set_xticklabels(ax_eng.get_xticklabels(), rotation=35, ha='center')
+plt.tight_layout()
 plt.show()
 
 #Double Bar graph by topic - for fun :)
