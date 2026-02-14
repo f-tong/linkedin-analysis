@@ -18,16 +18,16 @@ df['Reposters'] = df['Reposters'].apply(lambda x: x.split(', '))
 #print(df.head())
 
 #Check unique values of Liker, Commenter, Reposter names - looks good!
-names_list = []
+"""names_list = []
 for name in df['Likers']:
     names_list.extend(name)
 for name in df['Commenters']:
     names_list.extend(name)
 for name in df['Reposters']:
-    names_list.extend(name)
+    names_list.extend(name)"""
 
-names_df = pd.DataFrame(names_list, columns=['Name'])
-names_count_df = pd.DataFrame(names_df.groupby(['Name']).size().reset_index(name='Count'))
+#names_df = pd.DataFrame(names_list, columns=['Name'])
+#names_count_df = pd.DataFrame(names_df.groupby(['Name']).size().reset_index(name='Count'))
 
 #pd.set_option('display.max_rows', None)
 #print(names_count_df.head())
@@ -37,9 +37,10 @@ names_count_df = pd.DataFrame(names_df.groupby(['Name']).size().reset_index(name
 #Convert Length of Video from float to times - looks good
 #df['Length of Video'] = df['Length of Video'].apply(lambda x: x if pd.isna(x) else time(0, int(modf(x)[1]), int(round(modf(x)[0] * 100))))
 
+df['Engagement'] = df[['Likes', 'Comments', 'Reposts']].sum(axis=1)
 
 #--------ANALYSIS 1: What % of engagement is from employees/prev. employees?-------
-
+"""
 # Functions used
 #If name is in empl_df and is current/prev, add to index 1/2, else add to index 0
 def sort_empl(x):
@@ -90,4 +91,21 @@ ax_eng.set_xticklabels(ax_eng.get_xticklabels(), rotation=35, ha='center')
 plt.tight_layout()
 plt.show()
 
+"""
+
 #Double Bar graph by topic - for fun :)
+
+#----------ANALYSIS 3: What is the relationship between engagement and views?-----------------------
+
+#Scatter plot - all
+df.plot.scatter('Engagement', 'Impressions/Views', c='#2F419F', xlabel='Num Likes/Comments/Reposts', ylabel='Num Views', title='Engagement vs Views')
+
+#Scatter plot - minus outliers
+df[df['Impressions/Views'] < 1000].plot.scatter('Engagement', 'Impressions/Views', c='#00a6cb', xlabel='Num Likes/Comments/Reposts', ylabel='Num Views', title='Outliers Removed')
+plt.suptitle('Engagement vs Views')
+plt.show()
+
+#Before adding a line of best fit - is a linear model sufficient?
+
+#-----------ANALYSIS 4: What are the characteristics of top-performing videos?-----------
+#Length, engagement, etc.
