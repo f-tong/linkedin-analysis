@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from matplotlib import pyplot as plt
 
 df = pd.read_excel('SocialsAnalysis.xlsx', sheet_name = 'LinkedIn Posts')
@@ -68,7 +69,7 @@ plt.pie(empl_counts, labels=['Non-employee', 'Current employee', 'Previous emplo
 plt.suptitle('LinkedIn Engagement by Employee Status')
 plt.title('Oct-Dec 2025')
 
-
+"""
 #------------ANALYSIS 2: What topic of post gets the most views and engagement?-----------------
 
 #Groupby topic, sum views, likes, and comments
@@ -91,21 +92,30 @@ ax_eng.set_xticklabels(ax_eng.get_xticklabels(), rotation=35, ha='center')
 plt.tight_layout()
 plt.show()
 
-"""
+
 
 #Double Bar graph by topic - for fun :)
+#x_axis = 
 
 #----------ANALYSIS 3: What is the relationship between engagement and views?-----------------------
 
 #Scatter plot - all
 df.plot.scatter('Engagement', 'Impressions/Views', c='#2F419F', xlabel='Num Likes/Comments/Reposts', ylabel='Num Views', title='Engagement vs Views')
+#Line of best fit
+beta, alpha = np.polyfit(df['Engagement'], df['Impressions/Views'], 1)
+#print('Alpha: ' + str(round(alpha, 3)) + ', Beta: ' + str(round(beta, 3)))
+xseq = np.linspace(0, 55, num=100)
+plt.plot(xseq, alpha + beta*xseq)
 
 #Scatter plot - minus outliers
-df[df['Impressions/Views'] < 1000].plot.scatter('Engagement', 'Impressions/Views', c='#00a6cb', xlabel='Num Likes/Comments/Reposts', ylabel='Num Views', title='Outliers Removed')
+df_min_outliers = df[df['Impressions/Views'] < 1000]
+df_min_outliers.plot.scatter('Engagement', 'Impressions/Views', c='#00a6cb', xlabel='Num Likes/Comments/Reposts', ylabel='Num Views', title='Outliers Removed')
 plt.suptitle('Engagement vs Views')
+beta, alpha = np.polyfit(df_min_outliers['Engagement'], df_min_outliers['Impressions/Views'], 1)
+#print('Alpha: ' + str(round(alpha, 3)) + ', Beta: ' + str(round(beta, 3)))
+xseq = np.linspace(0, 16, num=100)
+plt.plot(xseq, alpha + beta*xseq)
 plt.show()
-
-#Before adding a line of best fit - is a linear model sufficient?
 
 #-----------ANALYSIS 4: What are the characteristics of top-performing videos?-----------
 #Length, engagement, etc.
