@@ -19,16 +19,16 @@ df['Reposters'] = df['Reposters'].apply(lambda x: x.split(', '))
 #print(df.head())
 
 #Check unique values of Liker, Commenter, Reposter names - looks good!
-"""names_list = []
+names_list = []
 for name in df['Likers']:
     names_list.extend(name)
 for name in df['Commenters']:
     names_list.extend(name)
 for name in df['Reposters']:
-    names_list.extend(name)"""
+    names_list.extend(name)
 
-#names_df = pd.DataFrame(names_list, columns=['Name'])
-#names_count_df = pd.DataFrame(names_df.groupby(['Name']).size().reset_index(name='Count'))
+names_df = pd.DataFrame(names_list, columns=['Name'])
+names_count_df = pd.DataFrame(names_df.groupby(['Name']).size().reset_index(name='Count'))
 
 #pd.set_option('display.max_rows', None)
 #print(names_count_df.head())
@@ -36,12 +36,12 @@ for name in df['Reposters']:
 #pd.reset_option('display.max_rows')
 
 #Convert Length of Video from float to times - looks good
-#df['Length of Video'] = df['Length of Video'].apply(lambda x: x if pd.isna(x) else time(0, int(modf(x)[1]), int(round(modf(x)[0] * 100))))
+df['Length of Video'] = df['Length of Video'].apply(lambda x: x if pd.isna(x) else time(0, int(modf(x)[1]), int(round(modf(x)[0] * 100))))
 
 df['Engagement'] = df[['Likes', 'Comments', 'Reposts']].sum(axis=1)
 
 #--------ANALYSIS 1: What % of engagement is from employees/prev. employees?-------
-"""
+
 # Functions used
 #If name is in empl_df and is current/prev, add to index 1/2, else add to index 0
 def sort_empl(x):
@@ -69,7 +69,7 @@ plt.pie(empl_counts, labels=['Non-employee', 'Current employee', 'Previous emplo
 plt.suptitle('LinkedIn Engagement by Employee Status')
 plt.title('Oct-Dec 2025')
 
-"""
+
 #------------ANALYSIS 2: What topic of post gets the most views and engagement?-----------------
 
 #Groupby topic, sum views, likes, and comments
@@ -90,12 +90,18 @@ plt.tight_layout()
 ax_eng = topics_df.plot(y='Engagement to Posts', kind='bar', ylabel="Mean Likes/Comments/Reposts", legend=False, title='Mean Engagement With LinkedIn Posts by Topic', color='#2F419F')
 ax_eng.set_xticklabels(ax_eng.get_xticklabels(), rotation=35, ha='center')
 plt.tight_layout()
-plt.show()
-
 
 
 #Double Bar graph by topic - for fun :)
-#x_axis = 
+x_axis = np.arange(df['Topic'].nunique())
+plt.bar(x_axis-0.2, topics_df['Views to Posts'], 0.4, color='#FFB700')
+plt.bar(x_axis+0.2, topics_df['Engagement to Posts'], 0.4, color='#008286')
+plt.title('Views and Engagement by Topic')
+plt.xticks(x_axis, df.groupby('Topic').groups.keys(), rotation=45)
+plt.ylabel('Count')
+plt.legend(['Views', 'Likes/Comments/Reposts'])
+plt.tight_layout()
+plt.show()
 
 #----------ANALYSIS 3: What is the relationship between engagement and views?-----------------------
 
